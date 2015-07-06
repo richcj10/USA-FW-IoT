@@ -19,8 +19,10 @@ static ETSTimer resetBtntimer;
 void ICACHE_FLASH_ATTR ioLed(int ena) {
 	//gpio_output_set is overkill. ToDo: use better mactos
 	if (ena) {
+		os_printf("\nTurn On Relay\n");
 		gpio_output_set((1<<LEDGPIO), 0, (1<<LEDGPIO), 0);
 	} else {
+		os_printf("\nTurn OFF Relay\n");
 		gpio_output_set(0, (1<<LEDGPIO), (1<<LEDGPIO), 0);
 	}
 }

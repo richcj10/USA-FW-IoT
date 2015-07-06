@@ -25,6 +25,7 @@ some pictures of cats.
 #include "espfs.h"
 #include "captdns.h"
 #include "webpages-espfs.h"
+#include "Graph.h"
 
 //The example can print out the heap use every 3 seconds. You can use this to catch memory leaks.
 //#define SHOW_HEAP_USE
@@ -67,6 +68,7 @@ HttpdBuiltInUrl builtInUrls[]={
 	{"*", cgiRedirectApClientToHostname, "esp8266.local"},
 	{"/", cgiRedirect, "/index.html"},
 	{"/relay.cgi", cgiLed, NULL},
+	{"/test.svg", makeGraph, NULL},
 	//{"/flash.bin", cgiReadFlash, NULL},
 	//{"/led.tpl", cgiEspFsTemplate, tplLed},
 	//{"/index.tpl", cgiEspFsTemplate, tplCounter},

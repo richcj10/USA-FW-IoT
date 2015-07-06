@@ -17,6 +17,10 @@ flash as a binary. Also handles the hit counter on the main page.
 #include "cgi.h"
 #include "io.h"
 
+char currGPIO0State = 0;
+char currGPIO4State = 0;
+char currGPIO5State = 0;
+char currGPIO12State = 0;
 
 //cause I can't be bothered to write an ioGetLed()
 static char currLedState=0;
@@ -24,21 +28,65 @@ static char currLedState=0;
 //Cgi that turns the LED on or off according to the 'led' param in the POST data
 int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 	int len;
-	char buff[1024];
-	
+	char buff[128];
+	int gotcmd=0;
+	os_printf("\nFCN Called!\n");
 	if (connData->conn==NULL) {
 		//Connection aborted. Clean up.
 		return HTTPD_CGI_DONE;
 	}
 
-	len=httpdFindArg(connData->post->buff, "led", buff, sizeof(buff));
-	if (len!=0) {
-		currLedState=atoi(buff);
-		ioLed(currLedState);
+	len=httpdFindArg(connData->getArgs, "relay1", buff, sizeof(buff));
+	if (len>0) {
+		os_printf("\nR1!\n");
+		currGPIO0State=atoi(buff);
+		os_printf("\nRelay val = %d\n",currGPIO0State);
+		ioLed(currGPIO0State);
+		gotcmd=1;
 	}
 
-	httpdRedirect(connData, "led.tpl");
-	return HTTPD_CGI_DONE;
+	len=httpdFindArg(connData->getArgs, "relay2", buff, sizeof(buff));
+	if (len>0) {
+		os_printf("\nR2!\n");
+		currGPIO4State=atoi(buff);
+		ioLed2(currGPIO4State);
+		gotcmd=1;
+	}
+
+	len=httpdFindArg(connData->getArgs, "relay3", buff, sizeof(buff));
+	if (len>0) {
+		os_printf("\nR3!\n");
+		currGPIO5State=atoi(buff);
+		ioLed3(currGPIO5State);
+		gotcmd=1;
+	}
+
+	len=httpdFindArg(connData->getArgs, "relay4", buff, sizeof(buff));
+	if (len>0) {
+		currGPIO12State=atoi(buff);
+		ioLed(currGPIO12State);
+		gotcmd=1;
+	}
+
+	if(gotcmd==1) {
+			//sysCfg.relay_1_state=currGPIO0State;
+			//sysCfg.relay_2_state=currGPIO4State;
+			//sysCfg.relay_3_state=currGPIO5State;
+			//sysCfg.relay_4_state=currGPIO12State;
+
+		httpdRedirect(connData, "relay.tpl");
+		return HTTPD_CGI_DONE;
+	} else { //with no parameters returns JSON with relay state
+
+		httpdStartResponse(connData, 200);
+		httpdHeader(connData, "Content-Type", "text/json");
+		httpdHeader(connData, "Access-Control-Allow-Origin", "*");
+		httpdEndHeaders(connData);
+
+		len=os_sprintf(buff, "{\"relay1\": %d\n,\"relay1name\":\"%s\",\n\"relay2\": %d\n,\"relay2name\":\"%s\",\n\"relay3\": %d\n,\"relay3name\":\"%s\" }\n",  currGPIO0State,"Lamp",currGPIO4State,"Fan",currGPIO5State,"Keven's Demo" );
+		httpdSend(connData, buff, -1);
+		return HTTPD_CGI_DONE;
+	}
 }
 
 
