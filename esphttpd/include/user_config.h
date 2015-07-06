@@ -8,4 +8,12 @@
 #define WIFI_AP_PASSWORD	"00000000"
 #define PLATFORM_DEBUG		true
 
+typedef struct{
+char relay_1_state;
+char relay_2_state;
+char relay_3_state;
+char relay_4_state;
+}sysCfg;
+
+
 #endif

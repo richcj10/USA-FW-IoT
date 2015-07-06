@@ -26,6 +26,7 @@ some pictures of cats.
 #include "captdns.h"
 #include "webpages-espfs.h"
 #include "Graph.h"
+#include "env.h"
 
 //The example can print out the heap use every 3 seconds. You can use this to catch memory leaks.
 //#define SHOW_HEAP_USE
@@ -72,7 +73,7 @@ HttpdBuiltInUrl builtInUrls[]={
 	//{"/flash.bin", cgiReadFlash, NULL},
 	//{"/led.tpl", cgiEspFsTemplate, tplLed},
 	//{"/index.tpl", cgiEspFsTemplate, tplCounter},
-	//{"/led.cgi", cgiLed, NULL},
+	{"/env.cgi", cgiEnv, NULL},
 #ifdef ESPFS_POS
 	{"/updateweb.cgi", cgiUploadEspfs, &espfsParams},
 #endif
