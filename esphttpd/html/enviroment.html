@@ -1,63 +1,82 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="style.css">
+  <meta charset="utf-8">
+  <title>jQuery UI Slider - Colorpicker</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <style>
+  #red, #green, #blue {
+    float: left;
+    clear: left;
+    width: 300px;
+    margin: 15px;
+  }
+  #swatch {
+    width: 120px;
+    height: 100px;
+    margin-top: 18px;
+    margin-left: 350px;
+    background-image: none;
+  }
+  #red .ui-slider-range { background: #ef2929; }
+  #red .ui-slider-handle { border-color: #ef2929; }
+  #green .ui-slider-range { background: #8ae234; }
+  #green .ui-slider-handle { border-color: #8ae234; }
+  #blue .ui-slider-range { background: #729fcf; }
+  #blue .ui-slider-handle { border-color: #729fcf; }
+  </style>
+  <script>
+  function hexFromRGB(r, g, b) {
+    var hex = [
+      r.toString( 16 ),
+      g.toString( 16 ),
+      b.toString( 16 )
+    ];
+    $.each( hex, function( nr, val ) {
+      if ( val.length === 1 ) {
+        hex[ nr ] = "0" + val;
+      }
+    });
+    return hex.join( "" ).toUpperCase();
+  }
+  function refreshSwatch() {
+    var red = $( "#red" ).slider( "value" ),
+      green = $( "#green" ).slider( "value" ),
+      blue = $( "#blue" ).slider( "value" ),
+      hex = hexFromRGB( red, green, blue );
+    $( "#swatch" ).css( "background-color", "#" + hex );
+  }
+  $(function() {
+    $( "#red, #green, #blue" ).slider({
+      orientation: "horizontal",
+      range: "min",
+      max: 255,
+      value: 127,
+      slide: refreshSwatch,
+      change: refreshSwatch
+    });
+    $( "#red" ).slider( "value", 255 );
+    $( "#green" ).slider( "value", 140 );
+    $( "#blue" ).slider( "value", 60 );
+  });
+  </script>
 </head>
-<body>
-<h2>Toggle relay</h2>
-<p>ESP8266-EVB has a relay output. It can be used to switch loads, running at 220VAC, up to 10A.</p>
-<p>This could be done by switching <strong>GPIO5</strong> on MOD-ESP8266-DEV.</p>
-<p>Go ahead and try it!</p>
-<hr>
-    <div style="text-align:center">
-        <p>SET POINT - Red:</p>
-        <table style="width:100%; text-align:center">
-            <tr>
-                <td>
-                    <button id="red-setpoint-dec">-</button>
-                </td>
-                <td>
-                    <div class="red-setpoint"></div>
-                </td>
-                <td>
-                    <button id="red-setpoint-inc">+</button>
-                </td>
-            </tr>
-        </table>
-        <p>SET POINT - Blue:</p>
-        <table style="width:100%; text-align:center">
-            <tr>
-                <td>
-                    <button id="blue-setpoint-dec">-</button>
-                </td>
-                <td>
-                    <div class="blue-setpoint"></div>
-                </td>
-                <td>
-                    <button id="blue-setpoint-inc">+</button>
-                </td>
-            </tr>
-        </table>
-        <p>SET POINT - Green:</p>
-        <table style="width:100%; text-align:center">
-            <tr>
-                <td>
-                    <button id="green-setpoint-dec">-</button>
-                </td>
-                <td>
-                    <div class="green-setpoint"></div>
-                </td>
-                <td>
-                    <button id="green-setpoint-inc">+</button>
-                </td>
-            </tr>
-        </table>
-		<p>Temperature: <span class="zone-temperature"></span>
-		<span style="display:none" class="humidity">, Humidity: <span id="zone-humidity"></span></span></p>
-    </div>
+<body class="ui-widget-content" style="border:0;">
+ 
+<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+  <span class="ui-icon ui-icon-pencil" style="float:left; margin:-2px 5px 0 0;"></span>
+  Simple Colorpicker
+</p>
+ 
+<div id="red"></div>
+<div id="green"></div>
+<div id="blue"></div>
+ 
+<div id="swatch" class="ui-widget-content ui-corner-all"></div>
+ 
+ 
 </body>
-<script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
-<script>window.jQuery || document.write('<script src="jquery-1.9.0.min.js"><\/script>')</script>
-<script type="text/javascript" src="enviroment.js"></script>
 </html>

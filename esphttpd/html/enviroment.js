@@ -135,8 +135,9 @@ $("#toggle").click(function () {
 $("#red-setpoint-dec").click(function () {
     $(".thermostatmode").css("background-color", "#555");
     $("#manual_thermostat").css("background-color", "#ff9600");
-    thermostat.mode = 0;
-    thermostat.manualsetpoint -= 0.5;
+    if(thermostat.manualsetpointred >= 5){
+        thermostat.manualsetpointred -= 5;
+    }
     setpoint = thermostat.manualsetpointred;
     $(".red-setpoint").html(setpoint.toFixed(1) + unit);
     save("red_manualsetpoint", ((thermostat.manualsetpointred.toFixed(1)) * 100).toString());
@@ -145,8 +146,9 @@ $("#red-setpoint-dec").click(function () {
 $("#red-setpoint-inc").click(function () {
     $(".thermostatmode").css("background-color", "#555");
     $("#manual_thermostat").css("background-color", "#ff9600");
-    thermostat.mode = 0;
-    thermostat.manualsetpoint += 0.5;
+    if(thermostat.manualsetpointred <= 95){
+        thermostat.manualsetpointred += 5;
+    }
     setpoint = thermostat.manualsetpointred;
     $(".zone-setpoint").html(setpoint.toFixed(1) + unit);
     save("red_manualsetpoint", ((thermostat.manualsetpointred.toFixed(1)) * 100).toString());
@@ -155,8 +157,10 @@ $("#red-setpoint-inc").click(function () {
 $("#blue-setpoint-dec").click(function () {
     $(".thermostatmode").css("background-color", "#555");
     $("#manual_thermostat").css("background-color", "#ff9600");
-    thermostat.mode = 0;
-    thermostat.manualsetpoint -= 0.5;
+    if(thermostat.manualsetpointblue >= 5){
+        thermostat.manualsetpointblue -= 5;
+    }
+    
     setpoint = thermostat.manualsetpointblue;
     $(".blue-setpoint").html(setpoint.toFixed(1) + unit);
     save("blue_manualsetpoint", ((thermostat.manualsetpointblue.toFixed(1)) * 100).toString());
@@ -165,8 +169,9 @@ $("#blue-setpoint-dec").click(function () {
 $("#blue-setpoint-inc").click(function () {
     $(".thermostatmode").css("background-color", "#555");
     $("#manual_thermostat").css("background-color", "#ff9600");
-    thermostat.mode = 0;
-    thermostat.manualsetpoint += 0.5;
+    if(thermostat.manualsetpointblue <= 95){
+        thermostat.manualsetpointblue += 5;
+    }
     setpoint = thermostat.manualsetpointblue;
     $(".blue-setpoint").html(setpoint.toFixed(1) + unit);
     save("blue_manualsetpoint", ((thermostat.manualsetpointblue.toFixed(1)) * 100).toString());
@@ -175,8 +180,9 @@ $("#blue-setpoint-inc").click(function () {
 $("#green-setpoint-dec").click(function () {
     $(".thermostatmode").css("background-color", "#555");
     $("#manual_thermostat").css("background-color", "#ff9600");
-    thermostat.mode = 0;
-    thermostat.manualsetpoint -= 0.5;
+    if(thermostat.manualsetpointgreen >= 5){
+        thermostat.manualsetpointgreen -= 5;
+    }
     setpoint = thermostat.manualsetpointgreen;
     $(".green-setpoint").html(setpoint.toFixed(1) + unit);
     save("green_manualsetpoint", ((thermostat.manualsetpointgreen.toFixed(1)) * 100).toString());
@@ -185,8 +191,9 @@ $("#green-setpoint-dec").click(function () {
 $("#green-setpoint-inc").click(function () {
     $(".thermostatmode").css("background-color", "#555");
     $("#manual_thermostat").css("background-color", "#ff9600");
-    thermostat.mode = 0;
-    thermostat.manualsetpoint += 0.5;
+    if(thermostat.manualsetpointgreen <= 95){
+        thermostat.manualsetpointgreen += 5;
+    }
     setpoint = thermostat.manualsetpointgreen;
     $(".green-setpoint").html(setpoint.toFixed(1) + unit);
     save("green_manualsetpoint", ((thermostat.manualsetpointgreen.toFixed(1)) * 100).toString());
