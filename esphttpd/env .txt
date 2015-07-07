@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h2>Enviromental Control</h2>
+<p>Who dosn't like to play with a bright RGB led?</p>
+<p>This device is controling the RGB by a host procesor and displaying temp and humidity level in the room.</p>
+<p>Go ahead and try it!</p>
+<hr>
+    <div style="text-align:center">
+        <p>SET POINT - Red:</p>
+        <table style="width:100%; text-align:center">
+            <tr>
+                <td>
+                    <button id="red-setpoint-dec">-</button>
+                </td>
+                <td>
+                    <div class="red-setpoint"></div>
+                </td>
+                <td>
+                    <button id="red-setpoint-inc">+</button>
+                </td>
+            </tr>
+        </table>
+        <p>SET POINT - Blue:</p>
+        <table style="width:100%; text-align:center">
+            <tr>
+                <td>
+                    <button id="blue-setpoint-dec">-</button>
+                </td>
+                <td>
+                    <div class="blue-setpoint"></div>
+                </td>
+                <td>
+                    <button id="blue-setpoint-inc">+</button>
+                </td>
+            </tr>
+        </table>
+        <p>SET POINT - Green:</p>
+        <table style="width:100%; text-align:center">
+            <tr>
+                <td>
+                    <button id="green-setpoint-dec">-</button>
+                </td>
+                <td>
+                    <div class="green-setpoint"></div>
+                </td>
+                <td>
+                    <button id="green-setpoint-inc">+</button>
+                </td>
+            </tr>
+        </table>
+		<p>Temperature: <span class="zone-temperature"></span>
+		<span style="display:none" class="humidity">, Humidity: <span id="zone-humidity"></span></span></p>
+    </div>
+</body>
+<script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+<script>window.jQuery || document.write('<script src="jquery-1.9.0.min.js"><\/script>')</script>
+<script type="text/javascript" src="enviroment.js"></script>
+</html>
