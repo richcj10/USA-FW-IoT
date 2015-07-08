@@ -36,7 +36,7 @@ ifeq ($(OS),Windows_NT)
 	endif
 	FIRMWAREDIR = ../bin/
 	ifndef COMPORT
-		ESPPORT = COM3
+		ESPPORT = COM22
 	else
 		ESPPORT = $(COMPORT)
 	endif

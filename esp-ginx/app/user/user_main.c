@@ -90,7 +90,7 @@ void user_init(void)
     wifi_set_opmode(0x01); // station mode
     wifi_station_set_auto_connect(1); 
 
-    config_wifi();
+    //config_wifi();
 
 	relay_init();   
    // mqtt_app_init();

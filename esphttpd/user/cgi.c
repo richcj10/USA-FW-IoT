@@ -30,7 +30,6 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 	int len;
 	char buff[128];
 	int gotcmd=0;
-	os_printf("\nFCN Called!\n");
 	if (connData->conn==NULL) {
 		//Connection aborted. Clean up.
 		return HTTPD_CGI_DONE;
@@ -41,7 +40,7 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 		os_printf("\nR1!\n");
 		currGPIO0State=atoi(buff);
 		os_printf("\nRelay val = %d\n",currGPIO0State);
-		ioLed(currGPIO0State);
+		ioLed4(currGPIO0State);
 		gotcmd=1;
 	}
 
@@ -61,13 +60,6 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 		gotcmd=1;
 	}
 
-	len=httpdFindArg(connData->getArgs, "relay4", buff, sizeof(buff));
-	if (len>0) {
-		currGPIO12State=atoi(buff);
-		ioLed(currGPIO12State);
-		gotcmd=1;
-	}
-
 	if(gotcmd==1) {
 			//sysCfg.relay_1_state=currGPIO0State;
 			//sysCfg.relay_2_state=currGPIO4State;
@@ -83,7 +75,7 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 		httpdHeader(connData, "Access-Control-Allow-Origin", "*");
 		httpdEndHeaders(connData);
 
-		len=os_sprintf(buff, "{\"relay1\": %d\n,\"relay1name\":\"%s\",\n\"relay2\": %d\n,\"relay2name\":\"%s\",\n\"relay3\": %d\n,\"relay3name\":\"%s\",\n\"relay4\": %d\n,\"relay4name\":\"%s\"}\n",  currGPIO0State,"Lamp",currGPIO4State,"Fan",currGPIO5State,"Keven's Demo",currGPIO12State,"woot" );
+		len=os_sprintf(buff, "{\"relay1\": %d\n,\"relay1name\":\"%s\",\n\"relay2\": %d\n,\"relay2name\":\"%s\",\n\"relay3\": %d\n,\"relay3name\":\"%s\"}\n",  currGPIO0State,"Lamp",currGPIO4State,"Fan",currGPIO5State,"Keven's Demo");
 		httpdSend(connData, buff, -1);
 		return HTTPD_CGI_DONE;
 	}
