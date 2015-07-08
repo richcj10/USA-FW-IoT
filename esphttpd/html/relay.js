@@ -10,7 +10,8 @@ var state = {
     relay2name: "Relay 2",
     relay3: 0,
     relay3name: "Relay 3",
-
+    relay4: 0,
+    relay3name: "Relay 4",
 };
 
 
@@ -19,6 +20,7 @@ function update() {
 	$("#relay1name").html(state.relay1name);
 	$("#relay2name").html(state.relay2name);
 	$("#relay3name").html(state.relay3name);
+    $("#relay4name").html(state.relay4name);
 
 	if (state.relay1 == 1) {
 		$("#relay1").html("ON");
@@ -42,6 +44,14 @@ function update() {
 	} else {
 		$("#relay3").html("OFF");
 		$("#relay3").css("background-color", "#555");
+	}
+    
+    if (state.relay4 == 1) {
+		$("#relay4").html("ON");
+		$("#relay4").css("background-color", "#ff9600");
+	} else {
+		$("#relay4").html("OFF");
+		$("#relay4").css("background-color", "#555");
 	}
 
 
@@ -93,6 +103,22 @@ $("#relay3").click(function () {
     }
 
     save("relay3", state.relay3);
+});
+
+$("#relay4").click(function () {
+	state.relay4++;
+	if (state.relay4 > 1) state.relay4 = 0;
+
+    if (state.relay4==1) {
+        $(this).html("ON");
+        $(this).css("background-color", "#ff9600");
+    }
+    else {
+        $(this).html("OFF");
+        $(this).css("background-color", "#555");
+    }
+
+    save("relay4", state.relay4);
 });
 
 
