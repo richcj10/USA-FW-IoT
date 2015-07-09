@@ -25,7 +25,6 @@ some pictures of cats.
 #include "espfs.h"
 #include "captdns.h"
 #include "webpages-espfs.h"
-#include "Graph.h"
 #include "env.h"
 
 //The example can print out the heap use every 3 seconds. You can use this to catch memory leaks.
@@ -68,12 +67,11 @@ should be placed above the URLs they protect.
 HttpdBuiltInUrl builtInUrls[]={
 	{"*", cgiRedirectApClientToHostname, "esp8266.local"},
 	{"/", cgiRedirect, "/index.html"},
-	{"/relay.cgi", cgiLed, NULL},
-	{"/test.svg", makeGraph, NULL},
+	{"/enviroment.html ", cgiRedirect, NULL},
 	//{"/flash.bin", cgiReadFlash, NULL},
 	//{"/led.tpl", cgiEspFsTemplate, tplLed},
 	//{"/index.tpl", cgiEspFsTemplate, tplCounter},
-	{"/env.cgi", cgiEnv, NULL},
+	{"/chartdata.cgi", cgiEnv, NULL},
 #ifdef ESPFS_POS
 	{"/updateweb.cgi", cgiUploadEspfs, &espfsParams},
 #endif

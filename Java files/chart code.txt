@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title> - jsFiddle demo</title>
+    
+      <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    
+  
+    
+      <script type='text/javascript' src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>  
+  
+  <style type='text/css'>
+    
+  </style>
+  
+
+
+<script type='text/javascript'>//<![CDATA[ 
+window.onload=function(){
+var data = {
+  // A labels array that can contain any sort of values
+  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+  // Our series array that contains series objects or in this case series data arrays
+  series:[ [5, 2, 4, 2, 0] ]
+};
+
+// Create a new line chart object where as first parameter we pass in a selector
+// that is resolving to our chart container element. The Second parameter
+// is the actual data object.
+new Chartist.Line('.ct-chart', data);
+
+setInterval(function(){updateData()},3000);
+
+function updateData() {
+
+    data.series[0][0] = data.series[0][0] + 1;
+    data.series[0][1] = data.series[0][1] - 5;
+    data.series[0][2] = data.series[0][2] + 8;
+    data.series[0][3] = data.series[0][3] - 3;
+    console.log(data.series[0]);
+    new Chartist.Line('.ct-chart', data);
+}
+}//]]>  
+
+</script>
+
+
+</head>
+<body>
+  <div class="ct-chart"></div>
+  
+</body>
+
+
+</html>
