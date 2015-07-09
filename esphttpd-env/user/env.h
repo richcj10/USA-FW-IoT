@@ -12,5 +12,7 @@
 
 int cgiEnv(HttpdConnData *connData);
 
+extern int tempF;
+extern int hudP;
 
 #endif /* USER_ENV_H_ */

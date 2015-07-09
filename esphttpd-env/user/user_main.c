@@ -26,6 +26,32 @@ some pictures of cats.
 #include "captdns.h"
 #include "webpages-espfs.h"
 #include "env.h"
+#include "dht22.h"
+
+os_timer_t mytimer;
+
+LOCAL void ICACHE_FLASH_ATTR setup_wifi_st_mode(void)
+{
+	wifi_set_opmode(STATION_MODE);
+	struct station_config stconfig;
+	wifi_station_disconnect();
+	wifi_station_dhcpc_stop();
+	if(wifi_station_get_config(&stconfig))
+	{
+		os_memset(stconfig.ssid, 0, sizeof(stconfig.ssid));
+		os_memset(stconfig.password, 0, sizeof(stconfig.password));
+		//os_sprintf(stconfig.ssid, "%s", WIFI_CLIENTSSID);
+		//os_sprintf(stconfig.password, "%s", WIFI_CLIENTPASSWORD);
+		if(!wifi_station_set_config(&stconfig))
+		{
+			os_printf("ESP8266 not set station config!\r\n");
+		}
+	}
+	wifi_station_connect();
+	wifi_station_dhcpc_start();
+	wifi_station_set_auto_connect(1);
+	os_printf("ESP8266 in STA mode configured.\r\n");
+}
 
 //The example can print out the heap use every 3 seconds. You can use this to catch memory leaks.
 //#define SHOW_HEAP_USE
@@ -101,11 +127,32 @@ static void ICACHE_FLASH_ATTR prHeapTimerCb(void *arg) {
 }
 #endif
 
+void readData(){
+	float lastTemp, lastHum;
+	struct dht_sensor_data* r;
+	r = DHTRead();
+	lastTemp = r->temperature;
+	lastHum = r->humidity;
+	os_printf("Temp = %f Hud = %f\n",lastTemp,lastHum);
+}
+
 //Main routine. Initialize stdout, the I/O, filesystem and the webserver and we're done.
 void user_init(void) {
+
+	if(wifi_get_opmode() != STATION_MODE)
+	{
+		//os_printf("ESP8266 is %s mode, restarting in %s mode...\r\n", WiFiMode[wifi_get_opmode()], WiFiMode[STATION_MODE]);
+		//setup_wifi_st_mode();
+	}
+	if(wifi_get_phy_mode() != PHY_MODE_11N)
+		wifi_set_phy_mode(PHY_MODE_11N);
+	if(wifi_station_get_auto_connect() == 0)
+		wifi_station_set_auto_connect(1);
+
 	stdoutInit();
 	ioInit();
 	captdnsInit();
+	DHTInit(SENSOR_DHT11, 30000);
 
 	// 0x40200000 is the base address for spi flash memory mapping, ESPFS_POS is the position
 	// where image is written in flash that is defined in Makefile.
@@ -115,13 +162,13 @@ void user_init(void) {
 	espFsInit((void*)(webpages_espfs_start));
 #endif
 	httpdInit(builtInUrls, 80);
-#ifdef SHOW_HEAP_USE
-	os_timer_disarm(&prHeapTimer);
-	os_timer_setfn(&prHeapTimer, prHeapTimerCb, NULL);
-	os_timer_arm(&prHeapTimer, 3000, 1);
-#endif
+
+	os_timer_disarm(&mytimer);
+	os_timer_setfn(&mytimer, readData, NULL);
+	os_timer_arm(&mytimer, 1500, 1);
 	os_printf("\nReady\n");
 }
+
 
 void user_rf_pre_init() {
 	//Not needed, but some SDK versions want this defined.

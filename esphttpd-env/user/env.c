@@ -9,11 +9,11 @@
 #include "env.h"
 #include "user_config.h"
 
+int tempF = 60;
+int hudP = 23;
 
 int ICACHE_FLASH_ATTR cgiEnv(HttpdConnData *connData) {
 	char buff[2048];
-	int tempF = 0;
-	int hudP = 0;
 	int len=0;
 
 	httpdStartResponse(connData, 200);
@@ -35,12 +35,16 @@ int ICACHE_FLASH_ATTR cgiEnv(HttpdConnData *connData) {
 		if(os_strcmp(buff,"temp")==0) {
 			len=os_sprintf(buff, "%d",tempF);
 			httpdSend(connData, buff, -1);
-			tempF = tempF + 5;
+			tempF = tempF - 2;
+			hudP = hudP + 2;
+			os_printf("\nTemp val = %d\n",tempF);
 		}
 		if(os_strcmp(buff,"hud")==0) {
 			len=os_sprintf(buff, "%d",hudP);
 			httpdSend(connData, buff, -1);
-			hudP = hudP +10;
+			hudP = hudP - 2;
+			tempF = tempF + 2;
+			os_printf("\nHud val = %d\n",hudP);
 		}
 	}
 	return HTTPD_CGI_DONE;
