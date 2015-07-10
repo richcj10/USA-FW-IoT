@@ -32,25 +32,25 @@ os_timer_t mytimer;
 
 LOCAL void ICACHE_FLASH_ATTR setup_wifi_st_mode(void)
 {
-	wifi_set_opmode(STATION_MODE);
-	struct station_config stconfig;
-	wifi_station_disconnect();
-	wifi_station_dhcpc_stop();
-	if(wifi_station_get_config(&stconfig))
-	{
-		os_memset(stconfig.ssid, 0, sizeof(stconfig.ssid));
-		os_memset(stconfig.password, 0, sizeof(stconfig.password));
-		//os_sprintf(stconfig.ssid, "%s", WIFI_CLIENTSSID);
-		//os_sprintf(stconfig.password, "%s", WIFI_CLIENTPASSWORD);
-		if(!wifi_station_set_config(&stconfig))
-		{
-			os_printf("ESP8266 not set station config!\r\n");
-		}
-	}
-	wifi_station_connect();
-	wifi_station_dhcpc_start();
-	wifi_station_set_auto_connect(1);
-	os_printf("ESP8266 in STA mode configured.\r\n");
+//	wifi_set_opmode(STATION_MODE);
+//	struct station_config stconfig;
+//	wifi_station_disconnect();
+//	wifi_station_dhcpc_stop();
+//	if(wifi_station_get_config(&stconfig))
+//	{
+//		os_memset(stconfig.ssid, 0, sizeof(stconfig.ssid));
+//		os_memset(stconfig.password, 0, sizeof(stconfig.password));
+//		//os_sprintf(stconfig.ssid, "%s", WIFI_CLIENTSSID);
+//		//os_sprintf(stconfig.password, "%s", WIFI_CLIENTPASSWORD);
+//		if(!wifi_station_set_config(&stconfig))
+//		{
+//			os_printf("ESP8266 not set station config!\r\n");
+//		}
+//	}
+//	wifi_station_connect();
+//	wifi_station_dhcpc_start();
+//	wifi_station_set_auto_connect(1);
+//	os_printf("ESP8266 in STA mode configured.\r\n");
 }
 
 //The example can print out the heap use every 3 seconds. You can use this to catch memory leaks.
@@ -128,12 +128,21 @@ static void ICACHE_FLASH_ATTR prHeapTimerCb(void *arg) {
 #endif
 
 void readData(){
-	float lastTemp, lastHum;
-	struct dht_sensor_data* r;
-	r = DHTRead();
-	lastTemp = r->temperature;
-	lastHum = r->humidity;
-	os_printf("Temp = %f Hud = %f\n",lastTemp,lastHum);
+	//float lastTemp, lastHum;
+	struct sensor_reading* result = readDHT();
+	long Treading=-9999;
+	long Treading2=-9999;
+	if(result->success) {
+		Treading=result->temperature*100;
+		Treading2=result->humidity*100;
+	}
+	if(Treading2 ==-9999 || Treading2 >12000 || Treading2 <-3000) { // Check for valid reading
+		os_printf("Could not get valid temperature reading\n");
+		return;
+	}
+	tempF = ((Treading/100)*1.8) + 32;
+	hudP = Treading2/100;
+	//os_printf("Temp = %lu Hud = %lu\n",Treading,Treading2);
 }
 
 //Main routine. Initialize stdout, the I/O, filesystem and the webserver and we're done.
@@ -142,7 +151,7 @@ void user_init(void) {
 	if(wifi_get_opmode() != STATION_MODE)
 	{
 		//os_printf("ESP8266 is %s mode, restarting in %s mode...\r\n", WiFiMode[wifi_get_opmode()], WiFiMode[STATION_MODE]);
-		//setup_wifi_st_mode();
+		setup_wifi_st_mode();
 	}
 	if(wifi_get_phy_mode() != PHY_MODE_11N)
 		wifi_set_phy_mode(PHY_MODE_11N);
