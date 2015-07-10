@@ -25,11 +25,7 @@ some pictures of cats.
 #include "espfs.h"
 #include "captdns.h"
 #include "webpages-espfs.h"
-#include "pwm.h"
-#include "env.h"
-
-unit8 PWM_CH[]= (0, 0, 0);
-unit16 freq = 1000;
+#include "led.h"
 
 //The example can print out the heap use every 3 seconds. You can use this to catch memory leaks.
 //#define SHOW_HEAP_USE
@@ -71,12 +67,10 @@ should be placed above the URLs they protect.
 HttpdBuiltInUrl builtInUrls[]={
 	{"*", cgiRedirectApClientToHostname, "esp8266.local"},
 	{"/", cgiRedirect, "/index.html"},
-	{"/relay.cgi", cgiLed, NULL},
-	{"/test.svg", makeGraph, NULL},
 	//{"/flash.bin", cgiReadFlash, NULL},
 	//{"/led.tpl", cgiEspFsTemplate, tplLed},
 	//{"/index.tpl", cgiEspFsTemplate, tplCounter},
-	{"/env.cgi", cgiEnv, NULL},
+	{"/led.cgi", cgiRGB, NULL},
 #ifdef ESPFS_POS
 	{"/updateweb.cgi", cgiUploadEspfs, &espfsParams},
 #endif
@@ -97,14 +91,6 @@ HttpdBuiltInUrl builtInUrls[]={
 	{NULL, NULL, NULL}
 };
 
-void SetPWM(){
-	pwm_set_duty(PWM_CH[2], 0);
-	pwm_start();
-	PWM_CH[2]+=1;
-	if(PWM_CH[2]>99)
-	   PWM_CH[2] =0;
-	//os_printf("Temp = %lu Hud = %lu\n",Treading,Treading2);
-}
 
 #ifdef SHOW_HEAP_USE
 static ETSTimer prHeapTimer;
@@ -116,29 +102,9 @@ static void ICACHE_FLASH_ATTR prHeapTimerCb(void *arg) {
 
 //Main routine. Initialize stdout, the I/O, filesystem and the webserver and we're done.
 void user_init(void) {
-
-	wifi_set_opmode(STATION_MODE);
-	uint8 ssid[32] = "USAFirmware_IoT";
-	uint8 password[64] = "0000";
-	struct station_config stationConf;
-	os_memcpy(&stationConf.ssid, ssid, 32);
-	os_memcpy(&stationConf.password, password, 64);
-	wifi_station_set_config(&stationConf);
-
-	struct ip_info info;
-
-	IP4_ADDR(&info.ip, 192, 168, 1, 4);
-	IP4_ADDR(&info.gw, 192, 168, 1, 1);
-	IP4_ADDR(&info.netmask, 255, 255, 255, 0);
-
-	wifi_station_dhcpc_stop();
-	wifi_set_ip_info(STATION_IF, &info);
-
 	stdoutInit();
 	ioInit();
 	captdnsInit();
-
-	pwm_init(freq, PWM_CH[]);
 
 	// 0x40200000 is the base address for spi flash memory mapping, ESPFS_POS is the position
 	// where image is written in flash that is defined in Makefile.
@@ -153,14 +119,7 @@ void user_init(void) {
 	os_timer_setfn(&prHeapTimer, prHeapTimerCb, NULL);
 	os_timer_arm(&prHeapTimer, 3000, 1);
 #endif
-
-	os_timer_t mytimer;
-
-	os_timer_disarm(&mytimer);
-	os_timer_setfn(&mytimer, setPWM, NULL);
-	os_timer_arm(&mytimer, 1500, 1);
 	os_printf("\nReady\n");
-
 }
 
 void user_rf_pre_init() {

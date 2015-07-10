@@ -5,12 +5,12 @@
  *      Author: USAF_TPARSH
  */
 
-#ifndef USER_ENV_H_
-#define USER_ENV_H_
+#ifndef USER_LED_H_
+#define USER_LED_H_
 
 #include "httpd.h"
 
-int cgiEnv(HttpdConnData *connData);
+int cgiRGB(HttpdConnData *connData);
 
 
-#endif /* USER_ENV_H_ */
+#endif /* USER_LED_H_ */

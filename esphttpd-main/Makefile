@@ -19,7 +19,7 @@ SDK_TOOLS	?= c:/Espressif/utils
 
 #Esptool.py path and port
 ESPTOOL		?=$(SDK_TOOLS)/esptool.exe
-ESPPORT		?=COM3
+ESPPORT		?=COM22
 ESPBAUD		?= 115200
 
 # name for the target project
