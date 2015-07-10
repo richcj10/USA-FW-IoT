@@ -27,31 +27,14 @@ some pictures of cats.
 #include "webpages-espfs.h"
 #include "env.h"
 #include "dht22.h"
+#include <user_interface.h>
+#include <osapi.h>
+#include <c_types.h>
+#include <mem.h>
+#include <os_type.h>
+#include "user_config.h"
 
 os_timer_t mytimer;
-
-LOCAL void ICACHE_FLASH_ATTR setup_wifi_st_mode(void)
-{
-//	wifi_set_opmode(STATION_MODE);
-//	struct station_config stconfig;
-//	wifi_station_disconnect();
-//	wifi_station_dhcpc_stop();
-//	if(wifi_station_get_config(&stconfig))
-//	{
-//		os_memset(stconfig.ssid, 0, sizeof(stconfig.ssid));
-//		os_memset(stconfig.password, 0, sizeof(stconfig.password));
-//		//os_sprintf(stconfig.ssid, "%s", WIFI_CLIENTSSID);
-//		//os_sprintf(stconfig.password, "%s", WIFI_CLIENTPASSWORD);
-//		if(!wifi_station_set_config(&stconfig))
-//		{
-//			os_printf("ESP8266 not set station config!\r\n");
-//		}
-//	}
-//	wifi_station_connect();
-//	wifi_station_dhcpc_start();
-//	wifi_station_set_auto_connect(1);
-//	os_printf("ESP8266 in STA mode configured.\r\n");
-}
 
 //The example can print out the heap use every 3 seconds. You can use this to catch memory leaks.
 //#define SHOW_HEAP_USE
@@ -148,15 +131,22 @@ void readData(){
 //Main routine. Initialize stdout, the I/O, filesystem and the webserver and we're done.
 void user_init(void) {
 
-	if(wifi_get_opmode() != STATION_MODE)
-	{
-		//os_printf("ESP8266 is %s mode, restarting in %s mode...\r\n", WiFiMode[wifi_get_opmode()], WiFiMode[STATION_MODE]);
-		setup_wifi_st_mode();
-	}
-	if(wifi_get_phy_mode() != PHY_MODE_11N)
-		wifi_set_phy_mode(PHY_MODE_11N);
-	if(wifi_station_get_auto_connect() == 0)
-		wifi_station_set_auto_connect(1);
+	wifi_set_opmode(STATION_MODE);
+	uint8 ssid[32] = "USAFirmware_IoT";
+	uint8 password[64] = "0000";
+	struct station_config stationConf;
+	os_memcpy(&stationConf.ssid, ssid, 32);
+	os_memcpy(&stationConf.password, password, 64);
+	wifi_station_set_config(&stationConf);
+
+	struct ip_info info;
+
+	IP4_ADDR(&info.ip, 192, 168, 1, 3);
+	IP4_ADDR(&info.gw, 192, 168, 1, 1);
+	IP4_ADDR(&info.netmask, 255, 255, 255, 0);
+
+	wifi_station_dhcpc_stop();
+	wifi_set_ip_info(STATION_IF, &info);
 
 	stdoutInit();
 	ioInit();

@@ -105,6 +105,24 @@ static void ICACHE_FLASH_ATTR prHeapTimerCb(void *arg) {
 
 //Main routine. Initialize stdout, the I/O, filesystem and the webserver and we're done.
 void user_init(void) {
+
+	wifi_set_opmode(STATION_MODE);
+	uint8 ssid[32] = "USAFirmware_IoT";
+	uint8 password[64] = "0000";
+	struct station_config stationConf;
+	os_memcpy(&stationConf.ssid, ssid, 32);
+	os_memcpy(&stationConf.password, password, 64);
+	wifi_station_set_config(&stationConf);
+
+	struct ip_info info;
+
+	IP4_ADDR(&info.ip, 192, 168, 1, 2);
+	IP4_ADDR(&info.gw, 192, 168, 1, 1);
+	IP4_ADDR(&info.netmask, 255, 255, 255, 0);
+
+	wifi_station_dhcpc_stop();
+	wifi_set_ip_info(STATION_IF, &info);
+
 	stdoutInit();
 	ioInit();
 	captdnsInit();
