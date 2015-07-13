@@ -6,7 +6,7 @@
 #define WIFI_CLIENTPASSWORD	"sutuff"
 #define WIFI_AP_NAME		"ESP8266"
 #define WIFI_AP_PASSWORD	"00000000"
-#define PLATFORM_DEBUG		false
+#define PLATFORM_DEBUG		true
 
 typedef struct{
 char relay_1_state;

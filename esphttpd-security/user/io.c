@@ -13,6 +13,11 @@
 
 #define LEDGPIO 2
 
+#include "io.h"
+#include "pwm.h"
+
+struct light_saved_param light_param;
+
 //static ETSTimer resetBtntimer;
 
 void ICACHE_FLASH_ATTR ioLed(int ena) {
@@ -77,5 +82,21 @@ void ioInit() {
 //	os_timer_disarm(&resetBtntimer);
 //	os_timer_setfn(&resetBtntimer, resetBtnTimerCb, NULL);
 //	os_timer_arm(&resetBtntimer, 500, 1);
+
+	light_param.pwm_period = 100;
+
+	uint32 io_info[][3] = {   {PWM_0_OUT_IO_MUX,PWM_0_OUT_IO_FUNC,PWM_0_OUT_IO_NUM},
+		                      {PWM_1_OUT_IO_MUX,PWM_1_OUT_IO_FUNC,PWM_1_OUT_IO_NUM},
+		                      {PWM_2_OUT_IO_MUX,PWM_2_OUT_IO_FUNC,PWM_2_OUT_IO_NUM},
+//		                      {PWM_3_OUT_IO_MUX,PWM_3_OUT_IO_FUNC,PWM_3_OUT_IO_NUM},
+//		                      {PWM_4_OUT_IO_MUX,PWM_4_OUT_IO_FUNC,PWM_4_OUT_IO_NUM},
+		                      };
+
+    uint32 pwm_duty_init[PWM_CHANNEL] = {0,0,0};
+
+    /*PIN FUNCTION INIT FOR PWM OUTPUT*/
+    pwm_init(light_param.pwm_period,  pwm_duty_init ,PWM_CHANNEL,io_info);
+    set_pwm_debug_en(0);
+    pwm_start();
 }
 

@@ -66,7 +66,7 @@ general ones. Authorization things (like authBasic) act as a 'barrier' and
 should be placed above the URLs they protect.
 */
 HttpdBuiltInUrl builtInUrls[]={
-	{"*", cgiRedirectApClientToHostname, "esp8266.local"},
+	{"*", cgiRedirectToHostname, "iot.com"},
 	{"/", cgiRedirect, "/index.html"},
 	{"/relay.cgi", cgiLed, NULL},
 	{"/test.svg", makeGraph, NULL},

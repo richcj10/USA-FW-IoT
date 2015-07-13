@@ -26,6 +26,21 @@ some pictures of cats.
 #include "captdns.h"
 #include "webpages-espfs.h"
 #include "cgi.h"
+#include "pwm.h"
+
+int duty = 0;
+
+void PwmUpdate(){
+	duty+=100;
+	//os_printf("/n pwm = %d",duty);
+	pwm_set_duty(red_led, 0);
+	pwm_set_duty(red_led, 1);
+	pwm_set_duty(red_led, 2);
+	pwm_start();
+	if(duty > 2000){
+		duty = 0;
+	}
+}
 
 //The example can print out the heap use every 3 seconds. You can use this to catch memory leaks.
 //#define SHOW_HEAP_USE
@@ -92,6 +107,8 @@ HttpdBuiltInUrl builtInUrls[]={
 };
 
 
+static ETSTimer prPwmTimer;
+
 #ifdef SHOW_HEAP_USE
 static ETSTimer prHeapTimer;
 
@@ -102,6 +119,24 @@ static void ICACHE_FLASH_ATTR prHeapTimerCb(void *arg) {
 
 //Main routine. Initialize stdout, the I/O, filesystem and the webserver and we're done.
 void user_init(void) {
+
+	wifi_set_opmode(STATION_MODE);
+	uint8 ssid[32] = "USAFirmware_IoT";
+	uint8 password[64] = "0000";
+	struct station_config stationConf;
+	os_memcpy(&stationConf.ssid, ssid, 32);
+	os_memcpy(&stationConf.password, password, 64);
+	wifi_station_set_config(&stationConf);
+
+	struct ip_info info;
+
+	IP4_ADDR(&info.ip, 192, 168, 1, 4);
+	IP4_ADDR(&info.gw, 192, 168, 1, 1);
+	IP4_ADDR(&info.netmask, 255, 255, 255, 0);
+
+	wifi_station_dhcpc_stop();
+	wifi_set_ip_info(STATION_IF, &info);
+
 	stdoutInit();
 	ioInit();
 	captdnsInit();
@@ -119,6 +154,12 @@ void user_init(void) {
 	os_timer_setfn(&prHeapTimer, prHeapTimerCb, NULL);
 	os_timer_arm(&prHeapTimer, 3000, 1);
 #endif
+
+
+	os_timer_disarm(&prPwmTimer);
+	os_timer_setfn(&prPwmTimer, PwmUpdate, NULL);
+	os_timer_arm(&prPwmTimer, 1000, 1);
+
 	os_printf("\nReady\n");
 }
 

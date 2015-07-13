@@ -19,7 +19,7 @@ SDK_TOOLS	?= c:/Espressif/utils
 
 #Esptool.py path and port
 ESPTOOL		?=$(SDK_TOOLS)/esptool.exe
-ESPPORT		?=COM24
+ESPPORT		?=COM6
 ESPBAUD		?= 115200
 
 # name for the target project
@@ -30,7 +30,7 @@ MODULES		= user
 EXTRA_INCDIR	= include libesphttpd/include
 
 # libraries used in this project, mainly provided by the SDK
-LIBS		= c gcc hal phy pp net80211 wpa main lwip
+LIBS		= c gcc hal phy pp net80211 wpa main lwip pwm
 #Add in esphttpd lib
 LIBS += esphttpd
 

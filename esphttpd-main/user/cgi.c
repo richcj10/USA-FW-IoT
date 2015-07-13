@@ -28,7 +28,7 @@ static char currLedState=0;
 //Cgi that turns the LED on or off according to the 'led' param in the POST data
 int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 	int len;
-	char buff[128];
+	char buff[300];
 	int gotcmd=0;
 	if (connData->conn==NULL) {
 		//Connection aborted. Clean up.
@@ -40,7 +40,7 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 		os_printf("\nR1!\n");
 		currGPIO0State=atoi(buff);
 		os_printf("\nRelay val = %d\n",currGPIO0State);
-		ioLed4(currGPIO0State);
+		ioLed(!currGPIO0State);
 		gotcmd=1;
 	}
 
@@ -48,7 +48,7 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 	if (len>0) {
 		os_printf("\nR2!\n");
 		currGPIO4State=atoi(buff);
-		ioLed2(currGPIO4State);
+		ioLed2(!currGPIO4State);
 		gotcmd=1;
 	}
 
@@ -56,7 +56,15 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 	if (len>0) {
 		os_printf("\nR3!\n");
 		currGPIO5State=atoi(buff);
-		ioLed3(currGPIO5State);
+		ioLed3(!currGPIO5State);
+		gotcmd=1;
+	}
+
+	len=httpdFindArg(connData->getArgs, "relay4", buff, sizeof(buff));
+	if (len>0) {
+		os_printf("\nR4!\n");
+		currGPIO5State=atoi(buff);
+		ioLed4(!currGPIO12State);
 		gotcmd=1;
 	}
 
@@ -75,7 +83,7 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 		httpdHeader(connData, "Access-Control-Allow-Origin", "*");
 		httpdEndHeaders(connData);
 
-		len=os_sprintf(buff, "{\"relay1\": %d\n,\"relay1name\":\"%s\",\n\"relay2\": %d\n,\"relay2name\":\"%s\",\n\"relay3\": %d\n,\"relay3name\":\"%s\"}\n",  currGPIO0State,"Lamp",currGPIO4State,"Fan",currGPIO5State,"Keven's Demo");
+		len=os_sprintf(buff, "{\"relay1\": %d\n,\"relay1name\":\"%s\",\n\"relay2\": %d\n,\"relay2name\":\"%s\",\n\"relay3\": %d\n,\"relay3name\":\"%s\",\n\"relay4\": %d\n,\"relay4name\":\"%s\"}\n",  currGPIO0State,"Lamp",currGPIO4State,"Fan",currGPIO5State,"Keven's Demo",currGPIO12State,"wtf Demo");
 		httpdSend(connData, buff, -1);
 		return HTTPD_CGI_DONE;
 	}

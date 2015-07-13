@@ -259,7 +259,7 @@ int ICACHE_FLASH_ATTR cgiRedirectApClientToHostname(HttpdConnData *connData) {
 	//Check if we have an softap interface; bail out if not
 	if (x!=2 && x!=3) return HTTPD_CGI_NOTFOUND;
 	remadr=(uint32 *)connData->conn->proto.tcp->remote_ip;
-	wifi_get_ip_info(SOFTAP_IF, &apip);
+	wifi_get_ip_info(STATION_IF, &apip);
 	if ((*remadr & apip.netmask.addr) == (apip.ip.addr & apip.netmask.addr)) {
 		return cgiRedirectToHostname(connData);
 	} else {

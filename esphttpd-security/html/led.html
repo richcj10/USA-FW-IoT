@@ -7,6 +7,7 @@
   <link href="nouislider.min.css" rel="stylesheet">
   <script src="nouislider.min.js"></script>
     <script src="wNumb.min.js"></script>
+    <script src="led.js"></script>
   <style type='text/css'>
     #red, #green, #blue {
 	margin: 10px;
@@ -59,9 +60,7 @@ function setColor(){
 		sliders[0].noUiSlider.get() + ',' +
 		sliders[1].noUiSlider.get() + ',' +
 		sliders[2].noUiSlider.get() + ')';
-    save("red", sliders[0].noUiSlider.get());
-    save("green", sliders[0].noUiSlider.get());
-    save("blue", sliders[0].noUiSlider.get());
+    save("status", Math.round(sliders[0].noUiSlider.get()),Math.round(sliders[1].noUiSlider.get()),Math.round(sliders[2].noUiSlider.get()));
 	// Fill the color box.
 	resultElement.style.background = color;
 	resultElement.style.color = color;

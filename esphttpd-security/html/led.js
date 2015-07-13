@@ -1,12 +1,12 @@
-function save(param, payload) {
+function save(param, payload1, payload2, payload3) {
 	doingsave=true;
     $.ajax({
         type: 'GET',
-        url: "led.cgi?" + param + "=" + payload,
+        url: "led.cgi?" + param + "=" + payload1, + "," + payload2, + "=" + payload3,
         async: true,
-		timeout: 3000,
+		timeout: 1500,
 		tryCount : 0,
-		retryLimit : 3,
+		retryLimit : 2,
 		success: function (data) {
 			statusMsg = false;
 			if(!connected) setStatus("Connected",2,0); 
