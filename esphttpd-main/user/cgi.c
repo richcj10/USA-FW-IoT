@@ -63,7 +63,7 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 	len=httpdFindArg(connData->getArgs, "relay4", buff, sizeof(buff));
 	if (len>0) {
 		os_printf("\nR4!\n");
-		currGPIO5State=atoi(buff);
+		currGPIO12State=atoi(buff);
 		ioLed4(!currGPIO12State);
 		gotcmd=1;
 	}
@@ -83,7 +83,7 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 		httpdHeader(connData, "Access-Control-Allow-Origin", "*");
 		httpdEndHeaders(connData);
 
-		len=os_sprintf(buff, "{\"relay1\": %d\n,\"relay1name\":\"%s\",\n\"relay2\": %d\n,\"relay2name\":\"%s\",\n\"relay3\": %d\n,\"relay3name\":\"%s\",\n\"relay4\": %d\n,\"relay4name\":\"%s\"}\n",  currGPIO0State,"Lamp",currGPIO4State,"Fan",currGPIO5State,"Keven's Demo",currGPIO12State,"wtf Demo");
+		len=os_sprintf(buff, "{\"relay1\": %d\n,\"relay1name\":\"%s\",\n\"relay2\": %d\n,\"relay2name\":\"%s\",\n\"relay3\": %d\n,\"relay3name\":\"%s\",\n\"relay4\": %d\n,\"relay4name\":\"%s\"}\n",  currGPIO0State,"Lamp1",currGPIO4State,"Fan",currGPIO5State,"Lamp2",currGPIO12State,"Kevin's Demo");
 		httpdSend(connData, buff, -1);
 		return HTTPD_CGI_DONE;
 	}

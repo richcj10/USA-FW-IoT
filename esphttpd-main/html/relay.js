@@ -156,9 +156,9 @@ function save(param, payload) {
         type: 'GET',
         url: "relay.cgi?" + param + "=" + payload,
         async: true,
-		timeout: 2000,
+		timeout: 3000,
 		tryCount : 0,
-		retryLimit : 2,
+		retryLimit : 5,
 		success: function (data) {
 			statusMsg = false;
 			if(!connected) setStatus("Connected",2,0); 
@@ -190,9 +190,9 @@ function server_get() {
 			url: "relay.cgi",
 			dataType: 'json',
 			async: true,
-			timeout: 2000,
+			timeout: 3000,
 			tryCount : 0,
-			retryLimit : 2,
+			retryLimit : 4,
 			success: function (data) {
 				if (data.length !== 0) {
 					statusMsg = false;

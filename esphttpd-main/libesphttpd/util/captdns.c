@@ -196,7 +196,7 @@ static void ICACHE_FLASH_ATTR captdnsRecv(void* arg, char *pusrdata, unsigned sh
 			setn16(&rf->rdlength, 4); //IPv4 addr is 4 bytes;
 			//Grab the current IP of the softap interface
 			struct ip_info info;
-			wifi_get_ip_info(SOFTAP_IF, &info);
+			wifi_get_ip_info(STATION_IF, &info);
 			*rend++=ip4_addr1(&info.ip);
 			*rend++=ip4_addr2(&info.ip);
 			*rend++=ip4_addr3(&info.ip);

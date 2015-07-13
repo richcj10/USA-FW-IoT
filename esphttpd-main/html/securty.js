@@ -5,7 +5,6 @@ var doingsave=false;
 	
 var state = {
     relay1: 0,
-    relay1name: "Relay 1",
 };
 
 
