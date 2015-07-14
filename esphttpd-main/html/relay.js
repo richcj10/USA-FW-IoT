@@ -14,6 +14,25 @@ var state = {
     relay4name: "Relay 4",
 };
 
+var count = 5;
+var status = 0;
+var timerId = 0;
+
+
+function buttonCountdown() {
+    status = 1;
+    $("#relay4").html(count);
+    count--;
+    if(count == 1)
+    {
+        status = 0;
+        count = 5;
+        clearInterval(timerId);
+        state.relay4 = 0;
+        update();
+        save("relay4", state.relay4);
+    }
+}
 
 function update() {
 
@@ -47,8 +66,15 @@ function update() {
 	}
     
 	if (state.relay4 == 1) {
-		$("#relay4").html("ON");
-		$("#relay4").css("background-color", "#ff9600");
+        if(status == 0){
+		  $("#relay4").html("ON");
+		  $("#relay4").css("background-color", "#ff9600");
+        }
+        else{
+          $("#relay4").html(count);
+		  $("#relay4").css("background-color", "#ff9600");
+        }
+            
 	} else {
 		$("#relay4").html("OFF");
 		$("#relay4").css("background-color", "#555");
@@ -111,6 +137,7 @@ $("#relay4").click(function () {
     if (state.relay4==1) {
         $(this).html("ON");
         $(this).css("background-color", "#ff9600");
+        timerId = setInterval(buttonCountdown, 1000);
     }
     else {
         $(this).html("OFF");
@@ -119,6 +146,7 @@ $("#relay4").click(function () {
 
     save("relay4", state.relay4);
 });
+
 
 // function for checking if the page is visible or not
 // (if not visible it will stop updating data)
@@ -136,14 +164,14 @@ function setStatus(msg,dur,pri){	 // show msg on status bar
 		if(statusMsg == true){return};
 		statusMsg= true;
 		if(pri>0){
-			$("#statusView").toggleClass("statusViewAlert",true);
-			$("#statusView").toggleClass("statusView",false);
+			//$("#statusView").toggleClass("statusViewAlert",true);
+			//$("#statusView").toggleClass("statusView",false);
 		} else {
-			$("#statusView").toggleClass("statusView",true);
-			$("#statusView").toggleClass("statusViewAlert",false);
+			//$("#statusView").toggleClass("statusView",true);
+			//$("#statusView").toggleClass("statusViewAlert",false);
 		}
-		$("#statusView").show();
-		$("#statusView").html(msg);
+		//$("#statusView").show();
+		//$("#statusView").html(msg);
 		dur = dur*1000;
 		if(dur >0){
 			setTimeout(function(){$("#statusView").hide(200);$("#statusView").html(""); statusMsg= false},dur)
@@ -225,6 +253,6 @@ function server_get() {
 $(document).ready(function() {
 	server_get();
 	update();
-	setInterval(server_get, 3000);
+	setInterval(server_get, 2000);
     checkVisibility();
 });

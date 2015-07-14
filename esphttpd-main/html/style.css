@@ -119,6 +119,10 @@ iframe {
 	text-align: center;
 }
 
+.wrapper {
+    text-align: center;
+}
+
 #button-state span {
 	font-size: 24px;
 }
@@ -143,6 +147,7 @@ iframe {
     padding:10px;
     cursor:pointer;
     text-decoration:none;
+    text-align: right;
 }
 #relay2 {
     font-size:22px;
@@ -153,6 +158,7 @@ iframe {
     padding:10px;
     cursor:pointer;
     text-decoration:none;
+    text-align: right;
 }
 
 #relay3 {
@@ -164,6 +170,7 @@ iframe {
     padding:10px;
     cursor:pointer;
     text-decoration:none;
+    text-align: right;
 }
 
 #relay4 {
@@ -175,6 +182,7 @@ iframe {
     padding:10px;
     cursor:pointer;
     text-decoration:none;
+    text-align: right;
 }
 
 #alarmbutton {

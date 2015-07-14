@@ -50,14 +50,14 @@ function setStatus(msg,dur,pri){	 // show msg on status bar
 		if(statusMsg == true){return};
 		statusMsg= true;
 		if(pri>0){
-			$("#statusView").toggleClass("statusViewAlert",true);
-			$("#statusView").toggleClass("statusView",false);
+			//$("#statusView").toggleClass("statusViewAlert",true);
+			//$("#statusView").toggleClass("statusView",false);
 		} else {
-			$("#statusView").toggleClass("statusView",true);
-			$("#statusView").toggleClass("statusViewAlert",false);
+			//$("#statusView").toggleClass("statusView",true);
+			//$("#statusView").toggleClass("statusViewAlert",false);
 		}
-		$("#statusView").show();
-		$("#statusView").html(msg);
+		//$("#statusView").show();
+		//$("#statusView").html(msg);
 		dur = dur*1000;
 		if(dur >0){
 			setTimeout(function(){$("#statusView").hide(200);$("#statusView").html(""); statusMsg= false},dur)

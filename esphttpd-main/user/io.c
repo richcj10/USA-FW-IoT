@@ -15,7 +15,10 @@
 #define LEDGPIO 13
 #define BTNGPIO 2
 
-//static ETSTimer resetBtntimer;
+static ETSTimer Alarmtimer;
+
+static int AlarmCount = 0;
+static int state = 1;
 
 void ICACHE_FLASH_ATTR ioLed(int ena) {
 	//gpio_output_set is overkill. ToDo: use better mactos
@@ -49,10 +52,10 @@ void ICACHE_FLASH_ATTR ioLed3(int ena) {
 void ICACHE_FLASH_ATTR ioLed4(int ena) {
 	//gpio_output_set is overkill. ToDo: use better mactos
 	if (ena) {
-		os_printf("\nTurn On Relay\n");
+		//os_printf("\nTurn On Relay\n");
 		gpio_output_set((1<<12), 0, (1<<12), 0);
 	} else {
-		os_printf("\nTurn OFF Relay\n");
+		//os_printf("\nTurn OFF Relay\n");
 		gpio_output_set(0, (1<<12), (1<<12), 0);
 	}
 }
@@ -64,16 +67,21 @@ void ICACHE_FLASH_ATTR BtnTimer(void *arg) {
 	}
 	if (resetCnt>=3) { //3 sec pressed
 			os_printf("\nAlarm Went off");
-			ioLed4(1);
-			ioLed4(0);
-			ioLed4(1);
-			ioLed4(0);
-			ioLed4(1);
-			ioLed4(0);
-			ioLed4(1);
-			ioLed4(0);
+			os_timer_arm(&Alarmtimer, 250, 1);
 			alarmstate = 0;
 			resetCnt=0;
+	}
+}
+
+void ICACHE_FLASH_ATTR AlarmTimer(void *arg) {
+	AlarmCount++;
+	ioLed4(state);
+	state = !state;
+	if(AlarmCount > 10)
+	{
+		AlarmCount = 0;
+		ioLed4(0);
+		os_timer_disarm(&Alarmtimer);
 	}
 }
 
@@ -85,8 +93,7 @@ void ioInit() {
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO12);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTCK_U, FUNC_GPIO13);
 	//gpio_output_set(0, 0, (1<<LEDGPIO), (1<<BTNGPIO));
-	//os_timer_disarm(&resetBtntimer);
-	//os_timer_setfn(&resetBtntimer, resetBtnTimerCb, NULL);
-	//os_timer_arm(&resetBtntimer, 500, 1);
+	os_timer_disarm(&Alarmtimer);
+	os_timer_setfn(&Alarmtimer, AlarmTimer, NULL);
 }
 
