@@ -43,9 +43,9 @@ void ICACHE_FLASH_ATTR ioLed2(int ena) {
 void ICACHE_FLASH_ATTR ioLed3(int ena) {
 	//gpio_output_set is overkill. ToDo: use better mactos
 	if (ena) {
-		gpio_output_set((1<<5), 0, (1<<5), 0);
+		gpio_output_set((1<<14), 0, (1<<14), 0);
 	} else {
-		gpio_output_set(0, (1<<5), (1<<5), 0);
+		gpio_output_set(0, (1<<14), (1<<14), 0);
 	}
 }
 
@@ -62,7 +62,7 @@ void ICACHE_FLASH_ATTR ioLed4(int ena) {
 
 void ICACHE_FLASH_ATTR BtnTimer(void *arg) {
 	static int resetCnt=0;
-	if (!GPIO_INPUT_GET(BTNGPIO)) {
+	if (GPIO_INPUT_GET(BTNGPIO)) {
 		resetCnt++;
 	}
 	if (resetCnt>=3) { //3 sec pressed
@@ -75,12 +75,13 @@ void ICACHE_FLASH_ATTR BtnTimer(void *arg) {
 
 void ICACHE_FLASH_ATTR AlarmTimer(void *arg) {
 	AlarmCount++;
-	ioLed4(state);
+	ioLed(state);
 	state = !state;
 	if(AlarmCount > 10)
 	{
 		AlarmCount = 0;
-		ioLed4(0);
+		state = 1;
+		ioLed(0);
 		os_timer_disarm(&Alarmtimer);
 	}
 }
@@ -92,6 +93,7 @@ void ioInit() {
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO12);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTCK_U, FUNC_GPIO13);
+	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTMS_U, FUNC_GPIO14);
 	//gpio_output_set(0, 0, (1<<LEDGPIO), (1<<BTNGPIO));
 	os_timer_disarm(&Alarmtimer);
 	os_timer_setfn(&Alarmtimer, AlarmTimer, NULL);

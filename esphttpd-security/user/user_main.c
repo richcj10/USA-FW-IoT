@@ -32,8 +32,8 @@ int duty = 0;
 
 void PwmUpdate(){
 	//os_printf("/n pwm = %d",duty);
-	pwm_set_duty(red_led*105, 0);
-	pwm_set_duty(green_led*105, 1);
+	pwm_set_duty(green_led*105, 0);
+	pwm_set_duty(red_led*105, 1);
 	pwm_set_duty(blue_led*105, 2);
 	pwm_start();
 }

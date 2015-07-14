@@ -86,7 +86,7 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 		httpdHeader(connData, "Access-Control-Allow-Origin", "*");
 		httpdEndHeaders(connData);
 
-		len=os_sprintf(buff, "{\"relay1\": %d\n,\"relay1name\":\"%s\",\n\"relay2\": %d\n,\"relay2name\":\"%s\",\n\"relay3\": %d\n,\"relay3name\":\"%s\",\n\"relay4\": %d\n,\"relay4name\":\"%s\"}\n",  currGPIO0State,"Lamp1",currGPIO4State,"Fan",currGPIO5State,"Lamp2",currGPIO12State,"Kevin's Demo");
+		len=os_sprintf(buff, "{\"relay1\": %d\n,\"relay1name\":\"%s\",\n\"relay2\": %d\n,\"relay2name\":\"%s\",\n\"relay3\": %d\n,\"relay3name\":\"%s\",\n\"relay4\": %d\n,\"relay4name\":\"%s\"}\n",  currGPIO0State,"Lamp 1",currGPIO4State,"Lamp 2",currGPIO5State,"Fan",currGPIO12State,"Pump");
 		httpdSend(connData, buff, -1);
 		return HTTPD_CGI_DONE;
 	}

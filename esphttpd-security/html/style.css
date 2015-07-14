@@ -89,6 +89,10 @@ p {
 	text-align: justify;
 }
 
+.box{
+    text-align: center;
+}
+
 iframe {
 	border-style: none;
 	height: 100%;
