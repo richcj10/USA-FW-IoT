@@ -4,37 +4,34 @@ var connected = false;
 var doingsave=false;
 	
 var state = {
-    relay1: 0,
+    alarm: 0,
 };
 
 
 function update() {
 
-	$("#relay1name").html(state.relay1name);
-
-	if (state.relay1 == 1) {
-		$("#relay1").html("ON");
-		$("#relay1").css("background-color", "#ff9600");
+	if (state.alarm == 1) {
+		$("alarmbutton").html("ARMED");
+		$("#alarmbutton").css("background-color", "#ff9600");
 	} else {
-		$("#relay1").html("OFF");
-		$("#relay1").css("background-color", "#555");
+		$("#alarmbutton").html("DISARMED");
+		$("#alarmbutton").css("background-color", "#555");
 	}
 }
 
-$("#relay1").click(function () {
-	state.relay1++;
-	if (state.relay1 > 1) state.relay1 = 0;
+$("#alarmbutton").click(function () {
+	state.alarm++;
+	if (state.alarm > 1) state.alarm = 0;
 
-    if (state.relay1==1) {
-        $(this).html("ON");
-        $(this).css("background-color", "#ff9600");
-    }
-    else {
-        $(this).html("OFF");
-        $(this).css("background-color", "#555");
-    }
+	if (state.alarm == 1) {
+		$("#alarmbutton").html("ARMED");
+		$("#alarmbutton").css("background-color", "#ff9600");
+	} else {
+		$("#alarmbutton").html("DISARMED");
+		$("#alarmbutton").css("background-color", "#555");
+	}
 
-    save("relay1", state.relay1);
+    save("alarm", state.alarm);
 });
 
 // function for checking if the page is visible or not
@@ -71,7 +68,7 @@ function save(param, payload) {
 	doingsave=true;
     $.ajax({
         type: 'GET',
-        url: "relay.cgi?" + param + "=" + payload,
+        url: "security.cgi?" + param + "=" + payload,
         async: true,
 		timeout: 3000,
 		tryCount : 0,
@@ -104,7 +101,7 @@ function server_get() {
 	checkVisibility();
 	if (visibleFlag) {
 		$.ajax({
-			url: "relay.cgi",
+			url: "security.cgi",
 			dataType: 'json',
 			async: true,
 			timeout: 3000,
@@ -115,10 +112,9 @@ function server_get() {
 					statusMsg = false;
 					if(!connected) setStatus("Connected",2,0); 
 					connected=true;
-					if(!doingsave) {
-						state = data;
-						update();
-					}
+                    console.log(data);
+				    state = data;
+				    update();
 				}
 			},
 		error : function(xhr, textStatus, errorThrown ) {
@@ -142,6 +138,6 @@ function server_get() {
 $(document).ready(function() {
 	server_get();
 	update();
-	setInterval(server_get, 5000);
+	setInterval(server_get, 1500);
     checkVisibility();
 });

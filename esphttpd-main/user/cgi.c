@@ -21,9 +21,12 @@ char currGPIO0State = 0;
 char currGPIO4State = 0;
 char currGPIO5State = 0;
 char currGPIO12State = 0;
+char alarmstate = 0;
 
 //cause I can't be bothered to write an ioGetLed()
 static char currLedState=0;
+
+static ETSTimer Btntimer;
 
 //Cgi that turns the LED on or off according to the 'led' param in the POST data
 int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
@@ -84,6 +87,52 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 		httpdEndHeaders(connData);
 
 		len=os_sprintf(buff, "{\"relay1\": %d\n,\"relay1name\":\"%s\",\n\"relay2\": %d\n,\"relay2name\":\"%s\",\n\"relay3\": %d\n,\"relay3name\":\"%s\",\n\"relay4\": %d\n,\"relay4name\":\"%s\"}\n",  currGPIO0State,"Lamp1",currGPIO4State,"Fan",currGPIO5State,"Lamp2",currGPIO12State,"Kevin's Demo");
+		httpdSend(connData, buff, -1);
+		return HTTPD_CGI_DONE;
+	}
+}
+
+//Cgi that turns the LED on or off according to the 'led' param in the POST data
+int ICACHE_FLASH_ATTR cgiDoor(HttpdConnData *connData) {
+	int len;
+	char buff[300];
+	int gotcmd=0;
+	if (connData->conn==NULL) {
+		//Connection aborted. Clean up.
+		return HTTPD_CGI_DONE;
+	}
+
+	len=httpdFindArg(connData->getArgs, "alarm", buff, sizeof(buff));
+	if (len>0) {
+		alarmstate=atoi(buff);
+		os_printf("\nAlarm val = %d\n",alarmstate);
+		if(alarmstate){
+			os_timer_disarm(&Btntimer);
+			os_timer_setfn(&Btntimer, BtnTimer, NULL);
+			os_timer_arm(&Btntimer, 500, 1);
+		}
+		else{
+			os_timer_disarm(&Btntimer);
+		}
+		gotcmd=1;
+	}
+
+	if(gotcmd==1) {
+			//sysCfg.relay_1_state=currGPIO0State;
+			//sysCfg.relay_2_state=currGPIO4State;
+			//sysCfg.relay_3_state=currGPIO5State;
+			//sysCfg.relay_4_state=currGPIO12State;
+
+		httpdRedirect(connData, "relay.tpl");
+		return HTTPD_CGI_DONE;
+	} else { //with no parameters returns JSON with relay state
+
+		httpdStartResponse(connData, 200);
+		httpdHeader(connData, "Content-Type", "text/json");
+		httpdHeader(connData, "Access-Control-Allow-Origin", "*");
+		httpdEndHeaders(connData);
+
+		len=os_sprintf(buff, "{\"alarm\": %d\n}\n",alarmstate);
 		httpdSend(connData, buff, -1);
 		return HTTPD_CGI_DONE;
 	}

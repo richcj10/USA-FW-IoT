@@ -31,15 +31,11 @@ some pictures of cats.
 int duty = 0;
 
 void PwmUpdate(){
-	duty+=100;
 	//os_printf("/n pwm = %d",duty);
-	pwm_set_duty(red_led, 0);
-	pwm_set_duty(red_led, 1);
-	pwm_set_duty(red_led, 2);
+	pwm_set_duty(red_led*105, 0);
+	pwm_set_duty(green_led*105, 1);
+	pwm_set_duty(blue_led*105, 2);
 	pwm_start();
-	if(duty > 2000){
-		duty = 0;
-	}
 }
 
 //The example can print out the heap use every 3 seconds. You can use this to catch memory leaks.
@@ -80,8 +76,8 @@ general ones. Authorization things (like authBasic) act as a 'barrier' and
 should be placed above the URLs they protect.
 */
 HttpdBuiltInUrl builtInUrls[]={
-	{"*", cgiRedirectApClientToHostname, "esp8266.local"},
-	{"/", cgiRedirect, "/index.html"},
+	//{"*", cgiRedirectApClientToHostname, "esp8266.local"},
+	//{"/", cgiRedirect, "/index.html"},
 	//{"/flash.bin", cgiReadFlash, NULL},
 	//{"/led.tpl", cgiEspFsTemplate, tplLed},
 	//{"/index.tpl", cgiEspFsTemplate, tplCounter},
@@ -158,7 +154,7 @@ void user_init(void) {
 
 	os_timer_disarm(&prPwmTimer);
 	os_timer_setfn(&prPwmTimer, PwmUpdate, NULL);
-	os_timer_arm(&prPwmTimer, 1000, 1);
+	os_timer_arm(&prPwmTimer, 100, 1);
 
 	os_printf("\nReady\n");
 }

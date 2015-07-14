@@ -44,12 +44,11 @@
   </style>
 </head>
  <body>
-<div id="colorpicker">
+
 	<div class="sliders" id="red"></div>
 	<div class="sliders" id="green"></div>
 	<div class="sliders" id="blue"></div>
 
-	<div class="result"></div>
     
    <script type='text/javascript'>
         
@@ -62,8 +61,8 @@ function setColor(){
 		sliders[2].noUiSlider.get() + ')';
     save("status", Math.round(sliders[0].noUiSlider.get()),Math.round(sliders[1].noUiSlider.get()),Math.round(sliders[2].noUiSlider.get()));
 	// Fill the color box.
-	resultElement.style.background = color;
-	resultElement.style.color = color;
+	//resultElement.style.background = color;
+	//resultElement.style.color = color;
 }
         
  </script>
@@ -72,12 +71,14 @@ var resultElement = document.getElementById('result'),
 	sliders = document.getElementsByClassName('sliders');
 for ( var i = 0; i < sliders.length; i++ ) {
 	noUiSlider.create(sliders[i], {
-		start: 127,
+		start: 227,
+        step: 10,
+        direction: 'ltr',
 		connect: "lower",
 		orientation: "vertical",
 		range: {
-			'min': 0,
-			'max': 255
+			'min': 100,
+			'max': 355
 		},
 		format: wNumb({
 			decimals: 0
@@ -88,6 +89,5 @@ for ( var i = 0; i < sliders.length; i++ ) {
 	sliders[i].noUiSlider.on('slide', setColor);
 } 
  </script>
-    </div>
      </body>
 </html>

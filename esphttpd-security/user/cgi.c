@@ -17,9 +17,9 @@ flash as a binary. Also handles the hit counter on the main page.
 #include "cgi.h"
 #include "io.h"
 
-char red_led = 0;
-char green_led = 0;
-char blue_led = 0;
+int red_led = 0;
+int green_led = 0;
+int blue_led = 0;
 
 //Cgi that turns the LED on or off according to the 'led' param in the POST data
 int ICACHE_FLASH_ATTR cgiLedRGB(HttpdConnData *connData) {
@@ -31,24 +31,15 @@ int ICACHE_FLASH_ATTR cgiLedRGB(HttpdConnData *connData) {
 		return HTTPD_CGI_DONE;
 	}
 
-	len=httpdFindArg(connData->getArgs, "red", buff, sizeof(buff));
+	len=httpdFindArg(connData->getArgs, "status", buff, sizeof(buff));
 	if (len>0) {
-		os_printf("\nRd!\n");
-		red_led=atoi(buff);
-		gotcmd=1;
-	}
-
-	len=httpdFindArg(connData->getArgs, "green", buff, sizeof(buff));
-	if (len>0) {
-		os_printf("\nGN!\n");
-		green_led=atoi(buff);
-		gotcmd=1;
-	}
-
-	len=httpdFindArg(connData->getArgs, "blue", buff, sizeof(buff));
-	if (len>0) {
-		os_printf("\nBl!\n");
-		blue_led=atoi(buff);
+		os_printf(buff);
+		red_led = ((buff[0]-48)*100+(buff[1]-48)*10+(buff[2]-48))-100;
+		green_led = ((buff[3]-48)*100+(buff[4]-48)*10+(buff[5]-48))-100;
+		blue_led = ((buff[6]-48)*100+(buff[7]-48)*10+(buff[8]-48))-70;
+		os_printf("red = %d",red_led);
+		os_printf("green = %d",green_led);
+		os_printf("blue = %d",blue_led);
 		gotcmd=1;
 	}
 

@@ -10,9 +10,10 @@
 
 
 #include <esp8266.h>
+#include "cgi.h"
 
 #define LEDGPIO 13
-//#define BTNGPIO 13
+#define BTNGPIO 2
 
 //static ETSTimer resetBtntimer;
 
@@ -56,23 +57,29 @@ void ICACHE_FLASH_ATTR ioLed4(int ena) {
 	}
 }
 
-//static void ICACHE_FLASH_ATTR resetBtnTimerCb(void *arg) {
-//	static int resetCnt=0;
-//	if (!GPIO_INPUT_GET(BTNGPIO)) {
-//		resetCnt++;
-//	} else {
-//		if (resetCnt>=6) { //3 sec pressed
-//			wifi_station_disconnect();
-//			wifi_set_opmode(0x3); //reset to AP+STA mode
-//			os_printf("Reset to AP mode. Restarting system...\n");
-//			system_restart();
-//		}
-//		resetCnt=0;
-//	}
-//}
+void ICACHE_FLASH_ATTR BtnTimer(void *arg) {
+	static int resetCnt=0;
+	if (!GPIO_INPUT_GET(BTNGPIO)) {
+		resetCnt++;
+	}
+	if (resetCnt>=3) { //3 sec pressed
+			os_printf("\nAlarm Went off");
+			ioLed4(1);
+			ioLed4(0);
+			ioLed4(1);
+			ioLed4(0);
+			ioLed4(1);
+			ioLed4(0);
+			ioLed4(1);
+			ioLed4(0);
+			alarmstate = 0;
+			resetCnt=0;
+	}
+}
 
 void ioInit() {
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0);
+	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U, FUNC_GPIO2);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO4_U, FUNC_GPIO4);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO12);

@@ -5,8 +5,11 @@
 #include "user_config.h"
 
 int cgiLed(HttpdConnData *connData);
+int cgiDoor(HttpdConnData *connData);
 int tplLed(HttpdConnData *connData, char *token, void **arg);
 int tplCounter(HttpdConnData *connData, char *token, void **arg);
+
+extern char alarmstate;
 
 
 #endif

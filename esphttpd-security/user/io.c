@@ -83,7 +83,7 @@ void ioInit() {
 //	os_timer_setfn(&resetBtntimer, resetBtnTimerCb, NULL);
 //	os_timer_arm(&resetBtntimer, 500, 1);
 
-	light_param.pwm_period = 100;
+	light_param.pwm_period = 1000;
 
 	uint32 io_info[][3] = {   {PWM_0_OUT_IO_MUX,PWM_0_OUT_IO_FUNC,PWM_0_OUT_IO_NUM},
 		                      {PWM_1_OUT_IO_MUX,PWM_1_OUT_IO_FUNC,PWM_1_OUT_IO_NUM},
