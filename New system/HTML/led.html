@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Slider - Colorpicker</title>
+  <script src="jquery-1.11.3.min.js"></script>
+  <link href="nouislider.min.css" rel="stylesheet">
+  <script src="nouislider.min.js"></script>
+    <script src="wNumb.min.js"></script>
+    <script src="led.js"></script>
+  <style type='text/css'>
+    #red, #green, #blue {
+	margin: 10px;
+	display: inline-block;
+	height: 200px;
+}
+#colorpicker {
+	height: 240px;
+	width: 310px;
+	margin: 0 auto;
+	padding: 10px;
+	border: 1px solid #BFBFBF;
+}
+#result {
+	margin: 60px 26px;
+	height: 100px;
+	width: 100px;
+	display: inline-block;
+	vertical-align: top;
+	color: rgb(127, 127, 127);
+	background: rgb(127, 127, 127);
+	border: 1px solid #fff;
+	box-shadow: 0 0 10px;
+}
+#red {
+	background: #c0392b;
+}
+#green {
+	background: #27ae60;
+}
+#blue {
+	background: #2980b9;
+}
+  </style>
+</head>
+ <body>
+<h2>RGB LED</h2>
+<p>The WiFi embeded device is controlling a RGB LED.
+<div class = "box" >
+	<div class="sliders" id="red"></div>
+	<div class="sliders" id="green"></div>
+	<div class="sliders" id="blue"></div>
+</div>
+    
+   <script type='text/javascript'>
+        
+function setColor(){
+	// Get the slider values,
+	// stick them together.
+	var color = 'rgb(' +
+		sliders[0].noUiSlider.get() + ',' +
+		sliders[1].noUiSlider.get() + ',' +
+		sliders[2].noUiSlider.get() + ')';
+    save("status", Math.round(sliders[0].noUiSlider.get()),Math.round(sliders[1].noUiSlider.get()),Math.round(sliders[2].noUiSlider.get()));
+	// Fill the color box.
+	//resultElement.style.background = color;
+	//resultElement.style.color = color;
+}
+        
+ </script>
+ <script type='text/javascript'>
+var resultElement = document.getElementById('result'),
+	sliders = document.getElementsByClassName('sliders');
+for ( var i = 0; i < sliders.length; i++ ) {
+	noUiSlider.create(sliders[i], {
+		start: 227,
+        step: 10,
+        direction: 'ltr',
+		connect: "lower",
+		orientation: "vertical",
+		range: {
+			'min': 100,
+			'max': 355
+		},
+		format: wNumb({
+			decimals: 0
+		})
+	});
+	// Bind the color changing function
+	// to the slide event.
+	sliders[i].noUiSlider.on('slide', setColor);
+} 
+ </script>
+     </body>
+</html>

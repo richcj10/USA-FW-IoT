@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html><head><title>Relay control</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div id="statusView" style=""></div>
+    <div class="block">
+		<div class="zone-title">
+        <p>Relay Control</p></div>
+		<hr/>
+    
+        <button id="relay1" style="float:right">OFF</button>
+        <div style="font-size:20px" id="relay1name">Relay 1</div>
+        <br/>
+        <button id="relay2" style="float:right">OFF</button>
+        <div style="font-size:20px" id="relay2name">Relay 2</div>
+        <br/>
+        <button id="relay3" style="float:right">OFF</button>
+        <div style="font-size:20px" id="relay3name">Relay 3</div>
+        <br/>
+        <button id="relay4" style="float:right">OFF</button>
+        <div style="font-size:20px" id="relay4name">Relay 4</div>
+        <br/>
+</div>
+
+<script>
+function myFunction() {
+    document.getElementById("relay1").style.position = "absolute";
+    document.getElementById("relay2").style.position = "absolute";
+    document.getElementById("relay3").style.position = "absolute";
+    document.getElementById("relay4").style.position = "absolute";
+}
+</script>
+    
+<script src="jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="relay.js"></script>
+</body>
+</html>
